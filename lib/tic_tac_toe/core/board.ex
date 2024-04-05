@@ -13,4 +13,8 @@ defmodule TicTacToe.Core.Board do
   def new do
     %Board{}
   end
+
+  def full?(%Board{grids: grids}) do
+    map_size(grids) == 9 && Enum.all?(grids, fn {_pos, value} -> value end)
+  end
 end

@@ -24,7 +24,7 @@ defmodule TicTacToe.GameServerTest do
 
   describe "play/3" do
     test "works", %{server: server} do
-      assert %Game{} = GameServer.play(server, :x, {0, 0})
+      assert :ok == GameServer.play(server, :x, {0, 0})
     end
 
     test "works with sequencies", %{server: server} do
@@ -36,16 +36,15 @@ defmodule TicTacToe.GameServerTest do
         {:x, {2, 0}}
       ]
 
-      games =
-        for {player, pos} <- sequencies do
-          assert %Game{} = GameServer.play(server, player, pos)
-        end
+      for {player, pos} <- sequencies do
+        assert :ok = GameServer.play(server, player, pos)
+      end
 
-      assert %Game{winner: :x} = List.last(games)
+      assert %Game{winner: :x} = GameServer.get_game(server)
     end
 
     test "refuses when not in turn", %{server: server} do
-      assert {:error, :not_in_turn} = GameServer.play(server, :o, {0, 0})
+      assert {:error, :invalid} = GameServer.play(server, :o, {0, 0})
     end
   end
 end

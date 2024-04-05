@@ -61,6 +61,17 @@ defmodule TicTacToe.Core.Game do
     end)
   end
 
+  @doc """
+  Play at the given position as the current player.
+  """
+  @spec play(t(), pos()) :: t() | {:error, :invalid}
+  def play(%Game{} = game, pos) do
+    play(game, game.current_player, pos)
+  end
+
+  @doc """
+  Play at the given position.
+  """
   @spec play(t(), player(), pos()) :: t() | {:error, :invalid}
   def play(%Game{current_player: player} = game, player, {x, y}) when x in 0..2 and y in 0..2 do
     case game do
@@ -95,4 +106,16 @@ defmodule TicTacToe.Core.Game do
   defp next_player(game) do
     game
   end
+
+  @doc """
+  Get the player at the given position.
+  """
+  @spec at(t(), pos()) :: player() | nil
+  def at(%Game{board: %Board{grids: grids}}, {x, y}) do
+    Map.get(grids, {x, y})
+  end
+
+  def game_over?(%Game{winner: winner}) when not is_nil(winner), do: true
+  def game_over?(%Game{} = game), do: Board.full?(game.board)
+  def game_over?(_), do: false
 end
