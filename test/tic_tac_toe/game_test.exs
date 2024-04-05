@@ -55,6 +55,34 @@ defmodule TicTacToe.GameTest do
 
       assert winner(game) == :o
     end
+
+    test "works on horizontal line" do
+      game = %Game{
+        board: %Board{
+          grids: %{
+            {0, 1} => :x,
+            {1, 1} => :x,
+            {2, 1} => :x
+          }
+        }
+      }
+
+      assert winner(game) == :x
+    end
+
+    test "works on vertical line" do
+      game = %Game{
+        board: %Board{
+          grids: %{
+            {1, 0} => :x,
+            {1, 1} => :x,
+            {1, 2} => :x
+          }
+        }
+      }
+
+      assert winner(game) == :x
+    end
   end
 
   describe "play/3" do

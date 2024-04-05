@@ -21,18 +21,18 @@ defmodule TicTacToe.GameServer do
   def init(_opts) do
     game = Game.new()
 
-    {:ok, %{game: game, current_playing: :x}}
+    {:ok, %{game: game}}
   end
 
   @impl true
   def handle_call(
         {:play, player, pos},
         from,
-        %{game: %Game{winner: nil} = game, current_playing: player} = state
+        %{game: %Game{winner: nil} = game} = state
       ) do
     case Game.play(game, player, pos) do
       %Game{winner: nil} = new_game ->
-        {:reply, new_game, %{state | game: new_game} |> next_player()}
+        {:reply, new_game, %{state | game: new_game}}
 
       %Game{} = new_game ->
         GenServer.reply(from, new_game)
@@ -54,9 +54,5 @@ defmodule TicTacToe.GameServer do
 
   def handle_call(:get_game, _from, state) do
     {:reply, state.game, state}
-  end
-
-  defp next_player(%{current_playing: player} = state) do
-    %{state | current_playing: if(player == :x, do: :o, else: :x)}
   end
 end

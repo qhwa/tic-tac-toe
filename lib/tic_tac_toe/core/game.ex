@@ -4,6 +4,7 @@ defmodule TicTacToe.Core.Game do
 
   @type t() :: %Game{
           board: Board.t(),
+          current_player: player(),
           winner: nil | player()
         }
 
@@ -14,7 +15,7 @@ defmodule TicTacToe.Core.Game do
   @lines [
     # Horizontal
     [{0, 0}, {1, 0}, {2, 0}],
-    [{0, 1}, {1, 2}, {2, 3}],
+    [{0, 1}, {1, 1}, {2, 1}],
     [{0, 2}, {1, 2}, {2, 2}],
     # Vertical
     [{0, 0}, {0, 1}, {0, 2}],
@@ -26,12 +27,11 @@ defmodule TicTacToe.Core.Game do
   ]
 
   @enforce_keys [:board]
-  defstruct [:board, :winner]
+  defstruct [:board, :winner, current_player: :x]
 
   def new do
     %Game{
-      board: Board.new(),
-      winner: nil
+      board: Board.new()
     }
   end
 
@@ -62,7 +62,7 @@ defmodule TicTacToe.Core.Game do
   end
 
   @spec play(t(), player(), pos()) :: t() | {:error, :invalid}
-  def play(%Game{} = game, player, {x, y}) when x in 0..2 and y in 0..2 do
+  def play(%Game{current_player: player} = game, player, {x, y}) when x in 0..2 and y in 0..2 do
     case game do
       %{board: %Board{grids: %{{^x, ^y} => p}}} when not is_nil(p) ->
         {:error, :invalid}
@@ -72,6 +72,7 @@ defmodule TicTacToe.Core.Game do
 
         %{game | board: %{board | grids: grids}}
         |> update_winner()
+        |> next_player()
     end
   end
 
@@ -81,5 +82,17 @@ defmodule TicTacToe.Core.Game do
 
   defp update_winner(%Game{} = game) do
     Map.put(game, :winner, winner(game))
+  end
+
+  defp next_player(%Game{winner: nil, current_player: :x} = game) do
+    %{game | current_player: :o}
+  end
+
+  defp next_player(%Game{winner: nil, current_player: :o} = game) do
+    %{game | current_player: :x}
+  end
+
+  defp next_player(game) do
+    game
   end
 end
