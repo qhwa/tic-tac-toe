@@ -11,6 +11,13 @@ I also wanted to learn more about Scenic and how to build GUI applications in El
 
 To run the game, you need to have Elixir installed on your machine. You can find instructions on how to install Elixir [here](https://elixir-lang.org/install.html). For the GUI, you need to install glfw which is a dependency of Scenic. You can find instructions on how to install glfw [here](https://github.com/ScenicFramework/scenic_driver_local).
 
+On Ubuntu, I used this script to install glfw:
+
+```bash
+sudo apt update
+sudo apt install -y pkgconf libglfw3-dev libglew-dev
+```
+
 After you have installed Elixir and glfw, you can run the game by running `mix run --no-halt` in the root of the project.
 
 ## Playing the game
